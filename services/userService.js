@@ -14,6 +14,7 @@ module.exports = {
       name: name,
       username: username,
       password: passwordHash,
+      create_At: Date.now(),
     });
     user
       .save()
