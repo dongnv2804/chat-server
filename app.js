@@ -16,6 +16,11 @@ const io = require("socket.io")(server);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -33,6 +38,8 @@ app.use(express.static(path.join(__dirname, "public")));
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }).then(() => {
   console.log("database connect");
 });
+
+app.use("/", indexRouter);
 
 // socker io
 const { roomService, chatService } = require("./services");
@@ -81,7 +88,5 @@ io.on("connection", (socket) => {
       });
   });
 });
-
-app.use("/", indexRouter);
 
 module.exports = app;

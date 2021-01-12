@@ -7,6 +7,10 @@ const { userService, roomService, chatService } = require("../services/");
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
+router.get("/test", (req, res, next) => {
+  console.log(req.query);
+  res.json(200, req.query);
+});
 
 router.post("/signup", userService.addUser);
 router.post("/signin", userService.login);
