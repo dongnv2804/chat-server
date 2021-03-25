@@ -17,9 +17,7 @@ module.exports = {
     rooms
       .find({ joinUsers: id })
       .then((data) => {
-        return res.json(200, {
-          data: data,
-        });
+        return res.json(200, data);
       })
       .catch((err) => {
         return res.json(500, {
@@ -27,12 +25,19 @@ module.exports = {
         });
       });
   },
-  joinRoom: async ({ roomId, userId }) => {
-    const room = await rooms.findById(roomId);
+  joinRoom: async ({ roomCode, userId }) => {
+    const room = await rooms.findOne({ roomCode: roomCode });
     if (room) {
+      const findUser = room.listUsers.find((elm) => elm === userId);
+      if (findUser) {
+        return new Promise((resolve, reject) => {
+          resolve(room);
+          reject("err");
+        });
+      }
       const newList = [...room.listUsers, ...userId];
       return rooms.updateOne(
-        { _id: roomId },
+        { _id: room._id },
         { listUsers: newList, update_At: Date.now() }
       );
     }
